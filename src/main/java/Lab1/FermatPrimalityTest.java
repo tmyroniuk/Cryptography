@@ -18,8 +18,8 @@ public class FermatPrimalityTest {
         BigInteger res;
         do {
             res = new BigInteger(n.bitLength(), rand);
-            //while res is not in [1, n - 1]
-        } while (res.compareTo(BigInteger.ONE) < 0 || res.compareTo(n.subtract(BigInteger.ONE)) > 0);
+            // while res is not in [2, n - 2]
+        } while (res.compareTo(BigInteger.TWO) < 0 || res.compareTo(n.subtract(BigInteger.TWO)) > 0);
         return res;
     }
 
@@ -28,22 +28,25 @@ public class FermatPrimalityTest {
         if(n.compareTo(BigInteger.ZERO) < 0) {
             throw new IllegalArgumentException();
         }
-
-        //base case
-        if (n.equals(BigInteger.ZERO) || n.equals(BigInteger.ONE))
+        if (n.compareTo(BigInteger.ONE) <= 0) {
+            // n is 0 or 1
             return false;
-        //test for two
-        if (n.equals(BigInteger.TWO))
+        }
+        if (n.compareTo(BigInteger.valueOf(3)) <= 0) {
+            // n is 2 or 3
             return true;
-        //easy test for even numbers
-        if (n.getLowestSetBit() != 0)
+        }
+        if (n.getLowestSetBit() != 0) {
+            // easy test for even numbers
             return false;
+        }
+        // n > 3
 
         for (int i = 0; i < maxIterations; ++i)
         {
             BigInteger a = randomBase(n);
             a = a.modPow(n.subtract(BigInteger.ONE), n);
-            if(!a.equals(BigInteger.ONE)) {
+            if (!a.equals(BigInteger.ONE)) {
                 return false;
             }
         }
@@ -51,24 +54,24 @@ public class FermatPrimalityTest {
     }
 
     public static void main(String[] args) {
-        Scanner sc= new Scanner(System.in); //System.in is a standard input stream
+        Scanner sc= new Scanner(System.in);
         String exit = "exit";
         int iterations = 10;
         String str;
 
         System.out.println(blue("Enter number to test, or ") + yellow(exit) + blue(" to exit"));
 
-        while(true) {
+        while (true) {
             str = sc.nextLine();
-            if(str.equals(exit)) {
+            if (str.equals(exit)) {
                 break;
             }
             try {
                 BigInteger n = new BigInteger(str);
-                if(isPrime(n, iterations)) {
+                if (isPrime(n, iterations)) {
                     System.out.println(blue(n + " is prime"));
                 } else {
-                    System.out.println(blue(n + " is composite"));
+                    System.out.println(blue(n + " is not prime"));
                 }
             } catch (IllegalArgumentException e) {
                 System.out.println(red("Invalid input"));
