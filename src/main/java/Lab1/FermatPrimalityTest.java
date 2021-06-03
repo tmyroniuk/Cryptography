@@ -1,5 +1,7 @@
 package Lab1;
 
+import static Lab1.ModPowBin.*;
+
 import java.math.BigInteger;
 import java.util.Random;
 import java.util.Scanner;
@@ -45,7 +47,7 @@ public class FermatPrimalityTest {
         for (int i = 0; i < maxIterations; ++i)
         {
             BigInteger a = randomBase(n);
-            a = a.modPow(n.subtract(BigInteger.ONE), n);
+            a = modPow(a, n.subtract(BigInteger.ONE), n);
             if (!a.equals(BigInteger.ONE)) {
                 return false;
             }

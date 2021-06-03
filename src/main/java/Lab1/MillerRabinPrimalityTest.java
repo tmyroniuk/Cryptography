@@ -1,5 +1,7 @@
 package Lab1;
 
+import static Lab1.ModPowBin.*;
+
 import java.math.BigInteger;
 import java.util.Random;
 import java.util.Scanner;
@@ -53,14 +55,14 @@ public class MillerRabinPrimalityTest {
         // Main loop
         for (int i = 0; i < maxIterations; ++i) {
             BigInteger a = randomBase(n);
-            BigInteger x = a.modPow(d, n);
+            BigInteger x = modPow(a, d, n);
             if (x.equals(BigInteger.ONE) || x.equals(n.subtract(BigInteger.ONE))) {
                 // x = 1 or x = n - 1
                 continue;
             }
             int j = 0;
             while (j < r - 1 && !x.equals(n.subtract(BigInteger.ONE))) {
-                x = x.modPow(BigInteger.TWO, n);
+                x = modPow(x, BigInteger.TWO, n);
                 ++j;
             }
             if(x.equals(n.subtract(BigInteger.ONE))) {
