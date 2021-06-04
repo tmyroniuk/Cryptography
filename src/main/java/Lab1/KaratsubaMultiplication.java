@@ -8,7 +8,7 @@ public class KaratsubaMultiplication {
     private static String yellow(String str){ return (char) 27 + "[33m" + str + (char) 27 + "[0m"; }
     private static String red(String str){ return (char) 27 + "[31m" + str + (char) 27 + "[0m"; }
 
-    public static BigInteger multiplyKaratsuba(BigInteger x, BigInteger y) {
+    public static BigInteger multiply(BigInteger x, BigInteger y) {
         int n = Math.max(x.bitLength(), y.bitLength());
 
         // Direct multiplication for small numbers
@@ -24,9 +24,9 @@ public class KaratsubaMultiplication {
         BigInteger c = y.shiftRight(n);
         BigInteger d = y.subtract(c.shiftLeft(n));
 
-        BigInteger ac = multiplyKaratsuba(a, c);
-        BigInteger bd = multiplyKaratsuba(b, d);
-        BigInteger abcd = multiplyKaratsuba(a.add(b), c.add(d)); // (a + b)(c + d)
+        BigInteger ac = multiply(a, c);
+        BigInteger bd = multiply(b, d);
+        BigInteger abcd = multiply(a.add(b), c.add(d)); // (a + b)(c + d)
 
         // ac * 2^2n + ((a+b)(c+d) - ac - bd) * 2^n + bd
         return bd.add(abcd.subtract(bd).subtract(ac).shiftLeft(n)).add(ac.shiftLeft(2 * n));
@@ -49,7 +49,7 @@ public class KaratsubaMultiplication {
                 if (temp.length != 2) {
                     throw new IllegalArgumentException();
                 }
-                System.out.println(blue(multiplyKaratsuba(new BigInteger(temp[0]), new BigInteger(temp[1])).toString()));
+                System.out.println(blue(multiply(new BigInteger(temp[0]), new BigInteger(temp[1])).toString()));
             } catch (IllegalArgumentException e) {
                 System.out.println(red("Invalid input"));
             }

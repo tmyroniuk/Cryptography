@@ -25,7 +25,7 @@ public class FermatPrimalityTest {
         return res;
     }
 
-    public static boolean isPrime(BigInteger n, int maxIterations)
+    public static boolean isProbablyPrime(BigInteger n, int maxIterations)
     {
         if(n.compareTo(BigInteger.ZERO) < 0) {
             throw new IllegalArgumentException();
@@ -70,7 +70,7 @@ public class FermatPrimalityTest {
             }
             try {
                 BigInteger n = new BigInteger(str);
-                if (isPrime(n, iterations)) {
+                if (isProbablyPrime(n, iterations)) {
                     System.out.println(blue(n + " is prime"));
                 } else {
                     System.out.println(blue(n + " is not prime"));
