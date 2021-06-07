@@ -1,5 +1,3 @@
-package Lab1;
-
 import java.math.BigInteger;
 
 public class ModPowBin {

@@ -1,4 +1,3 @@
-import Lab1.ExtendedEuclideanAlgorithm;
 import org.junit.Assert;
 import org.junit.Test;
 

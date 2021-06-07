@@ -1,5 +1,3 @@
-package Lab1;
-
 import java.math.BigInteger;
 import java.util.Scanner;
 
@@ -11,6 +9,7 @@ public class Montgomery {
     private static BigInteger reduce(BigInteger a, BigInteger b, BigInteger n) {
         BigInteger r = BigInteger.TWO.shiftLeft(n.bitLength());
         BigInteger[] gcdExt = ExtendedEuclideanAlgorithm.gcdExtended(n, r);
+
 
         // u = (t + ( t ⋅ n′ mod r) ⋅ n) / r
         BigInteger t = a.multiply(b);

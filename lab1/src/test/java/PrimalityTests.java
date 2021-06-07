@@ -1,5 +1,3 @@
-import Lab1.FermatPrimalityTest;
-import Lab1.MillerRabinPrimalityTest;
 import org.junit.Assert;
 import org.junit.Test;
 

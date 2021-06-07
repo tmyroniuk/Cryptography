@@ -1,4 +1,4 @@
-import Lab1.Montgomery;
+import lab1.Montgomery;
 import org.junit.Assert;
 import org.junit.Test;
 

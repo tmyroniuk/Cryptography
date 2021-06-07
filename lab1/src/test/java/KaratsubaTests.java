@@ -1,4 +1,4 @@
-import Lab1.KaratsubaMultiplication;
+import lab1.KaratsubaMultiplication;
 import org.junit.Assert;
 import org.junit.Test;
 

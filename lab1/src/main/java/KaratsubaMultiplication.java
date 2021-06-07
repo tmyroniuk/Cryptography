@@ -1,28 +1,33 @@
-package Lab1;
-
 import java.math.BigInteger;
 import java.util.Scanner;
 
-
-public class ExtendedEuclideanAlgorithm {
+public class KaratsubaMultiplication {
     private static String blue(String str){ return (char) 27 + "[34m" + str + (char) 27 + "[0m"; }
     private static String yellow(String str){ return (char) 27 + "[33m" + str + (char) 27 + "[0m"; }
     private static String red(String str){ return (char) 27 + "[31m" + str + (char) 27 + "[0m"; }
 
-    /**
-     * @return BigInteger[3] {gcd(a, b), x, y}, where ax + by = gcd(a, b)
-     */
-    public static BigInteger[] gcdExtended(BigInteger a, BigInteger b)
-    {
-        if(b.equals(BigInteger.ZERO)) {
-            return new BigInteger[] {a, BigInteger.ONE, BigInteger.ZERO};
-        } else if (a.equals(BigInteger.ZERO)) {
-            return new BigInteger[] {b, BigInteger.ZERO, BigInteger.ONE};
-        }
+    public static BigInteger multiply(BigInteger x, BigInteger y) {
+        int n = Math.max(x.bitLength(), y.bitLength());
 
-        BigInteger[] res = gcdExtended(b.remainder(a), a);
-        // x(i+1) = y(i) - (b / a) * x(i)
-        return new BigInteger[] {res[0], res[2].subtract(b.divide(a).multiply(res[1])), res[1]};
+        // Direct multiplication for small numbers
+        if (n <= 3)
+            return x.multiply(y);
+
+        // number of bits divided by 2, rounded up
+        n = (n / 2) + (n % 2);
+
+        // x = a * 2^n + b, y = c * 2^n + d
+        BigInteger a = x.shiftRight(n);
+        BigInteger b = x.subtract(a.shiftLeft(n));
+        BigInteger c = y.shiftRight(n);
+        BigInteger d = y.subtract(c.shiftLeft(n));
+
+        BigInteger ac = multiply(a, c);
+        BigInteger bd = multiply(b, d);
+        BigInteger abcd = multiply(a.add(b), c.add(d)); // (a + b)(c + d)
+
+        // ac * 2^2n + ((a+b)(c+d) - ac - bd) * 2^n + bd
+        return bd.add(abcd.subtract(bd).subtract(ac).shiftLeft(n)).add(ac.shiftLeft(2 * n));
     }
 
     public static void main(String[] args) {
@@ -42,8 +47,7 @@ public class ExtendedEuclideanAlgorithm {
                 if (temp.length != 2) {
                     throw new IllegalArgumentException();
                 }
-                BigInteger[] res = gcdExtended(new BigInteger(temp[0]), new BigInteger(temp[1]));
-                System.out.println(blue("gcd: " + res[0] + ", x: " + res[1] + ", y: " + res[2]));
+                System.out.println(blue(multiply(new BigInteger(temp[0]), new BigInteger(temp[1])).toString()));
             } catch (IllegalArgumentException e) {
                 System.out.println(red("Invalid input"));
             }
