@@ -15,40 +15,26 @@ public class Key {
     }
 
     public static Key generateKey(int keyLength) {
-        BigInteger p = randomBigInt(keyLength, 90);
-        BigInteger q = largePrimeFactor(p.subtract(BigInteger.ONE), keyLength << 2);
-        BigInteger x = randomBigInt(q.subtract(BigInteger.ONE));
-        BigInteger g = p.shiftLeft(1).nextProbablePrime().mod(p);
+        // q - large prime number
+        BigInteger q = randomBigInt(keyLength, 100);
+        BigInteger tempKey;
+        // p - large prime number, q | (p-1)
+        BigInteger p;
+        do {
+            tempKey = randomBigInt(keyLength);
+            p = q.multiply(tempKey).add(BigInteger.ONE);
+        } while(!p.isProbablePrime(100));
+        // g - generator of the group (Z/QZ)
+        BigInteger g;
+        do {
+            g = randomBigInt(p).modPow(tempKey, p);
+        } while (g.equals(BigInteger.ONE));
+        // x - private key; x is an element of (Z/QZ)
+        BigInteger x = randomBigInt(q);
+        // y - public key
         BigInteger y = g.modPow(x, p);
 
-        //System.out.println("p:" + p + " x:" + x + " q:" + q + " g:" + g + " y:" + y);
-        return new Key(new PrivateKey(x, q), new PublicKey(p, g, y));
-    }
-
-    private static BigInteger largePrimeFactor(BigInteger p, int bitLength) {
-        assert p.compareTo(BigInteger.ONE) > 0;
-
-        BigInteger largePrime = BigInteger.ONE;
-        while (p.getLowestSetBit() != 0) {
-            largePrime = BigInteger.TWO;
-            p = p.shiftRight(1);
-        }
-        for (BigInteger i = BigInteger.valueOf(3); i.compareTo(p.sqrt()) <= 0; i = i.add(BigInteger.TWO)) {
-            while (p.remainder(i).equals(BigInteger.ZERO)) {
-                largePrime = i;
-                if(largePrime.bitLength() >= bitLength) {
-                    return largePrime;
-                }
-                p = p.divide(i);
-                if(p.isProbablePrime(90)) {
-                    return p;
-                }
-            }
-        }
-        if (p.compareTo(BigInteger.TWO) > 0) {
-            largePrime = p;
-        }
-        return largePrime;
+        return new Key(new PrivateKey(x), new PublicKey(p, q, g, y));
     }
 
     public PrivateKey getPrivateKey() {

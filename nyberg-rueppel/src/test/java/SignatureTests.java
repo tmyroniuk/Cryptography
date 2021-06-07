@@ -17,9 +17,9 @@ public class SignatureTests {
         msg2 = BigInteger.valueOf(4325);
         msg3 = BigInteger.valueOf(234);
 
-        key1 = new Key(new PrivateKey(BigInteger.valueOf(3), BigInteger.valueOf(101)), new PublicKey(BigInteger.valueOf(607), BigInteger.valueOf(601), BigInteger.valueOf(391)));
-        key2 = new Key(new PrivateKey(BigInteger.valueOf(5), BigInteger.valueOf(17)), new PublicKey(BigInteger.valueOf(443), BigInteger.valueOf(134), BigInteger.valueOf(43)));
-        key3 = new Key(new PrivateKey(BigInteger.valueOf(8), BigInteger.valueOf(251)), new PublicKey(BigInteger.valueOf(503), BigInteger.valueOf(321), BigInteger.valueOf(231)));
+        key1 = Key.generateKey(128);
+        key2 = Key.generateKey(128);
+        key3 = Key.generateKey(128);
 
         msgS1 = Encryptor.encrypt(key1, msg1);
         msgS2 = Encryptor.encrypt(key2, msg2);
@@ -27,21 +27,29 @@ public class SignatureTests {
     }
 
     @Test
-    public void basicTest() {
+    public void basicValidationTest() {
         Assert.assertTrue( Encryptor.verify(msg1, msgS1, key1.getPublicKey()));
+        Assert.assertTrue( Encryptor.verify(msg2, msgS2, key2.getPublicKey()));
+        Assert.assertTrue( Encryptor.verify(msg3, msgS3, key3.getPublicKey()));
     }
     @Test
-    public void verificationKeyTest1() {
+    public void basicDecryptionTest() {
+        Assert.assertEquals(msg1, Encryptor.decrypt(msgS1, key1.getPublicKey()));
+        Assert.assertEquals(msg2, Encryptor.decrypt(msgS2, key2.getPublicKey()));
+        Assert.assertEquals(msg3, Encryptor.decrypt(msgS3, key3.getPublicKey()));
+    }
+    @Test
+    public void validationKeyTest1() {
         Assert.assertFalse(Encryptor.verify(msg1, msgS1, key2.getPublicKey()));
         Assert.assertFalse(Encryptor.verify(msg1, msgS1, key3.getPublicKey()));
     }
     @Test
-    public void verificationKeyTest2() {
+    public void validationKeyTest2() {
         Assert.assertFalse(Encryptor.verify(msg2, msgS2, key1.getPublicKey()));
         Assert.assertFalse(Encryptor.verify(msg2, msgS2, key3.getPublicKey()));
     }
     @Test
-    public void verificationKeyTest3() {
+    public void validationKeyTest3() {
         Assert.assertFalse(Encryptor.verify(msg3, msgS3, key1.getPublicKey()));
         Assert.assertFalse(Encryptor.verify(msg3, msgS3, key2.getPublicKey()));
     }
